@@ -85,8 +85,13 @@ python app/main.py
 📊 Formato esperado do CSV
 Coluna	Descrição
 data	Data da venda
+categoria Categoria do produto. Exemplo: móveis
 produto	Nome do produto
 valor	Valor da venda
+quantidade Quantidade de produtos por venda
+canal_de_venda Canal utilizado para a venda
+vendedor Nome do vendedor
+
 
 👤 Autor
 

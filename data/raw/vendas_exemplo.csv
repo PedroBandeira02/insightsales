@@ -1,0 +1,16 @@
+data_venda,produto,categoria,preco_unitario,quantidade,canal_venda,vendedor
+2024-01-02,Notebook Pro,Eletrônicos,4500.00,1,Online,Ana
+2024-01-03,Mouse Wireless,Acessórios,120.50,2,Online,Carlos
+2024-01-05,Teclado Mecânico,Acessórios,350.00,1,Loja Física,Ana
+2024-01-05,Monitor 27",Eletrônicos,1800.00,1,Loja Física,Bruno
+2024-01-08,Cadeira Gamer,Móveis,950.00,1,Online,Daniel
+2024-01-10,Notebook Pro,Eletrônicos,4500.00,1,Online,
+2024-01-12,Headset,Acessórios,299.90,3,Online,Carlos
+2024-01-12,Mouse Wireless,Acessórios,120.50,1,Loja Física,Ana
+2024-01-15,Escrivaninha,Móveis,1100.00,1,Loja Física,Bruno
+2024-01-18,Monitor 27",Eletrônicos,1800.00,2,Online,Daniel
+2024-01-20,Notebook Air,Eletrônicos,3800.00,1,Online,Ana
+2024-01-22,Teclado Mecânico,Acessórios,350.00,2,Online,
+2024-01-25,Notebook Air,Eletrônicos,3800.00,1,Loja Física,Carlos
+2024-01-27,Cadeira Gamer,Móveis,950.00,2,Online,Bruno
+2024-01-30,Headset,Acessórios,299.90,1,Loja Física,Daniel
