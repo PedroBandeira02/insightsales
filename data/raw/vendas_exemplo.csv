@@ -1,16 +1,46 @@
 data_venda,produto,categoria,preco_unitario,quantidade,canal_venda,vendedor
-2024-01-02,Notebook Pro,Eletrônicos,4500.00,1,Online,Ana
-2024-01-03,Mouse Wireless,Acessórios,120.50,2,Online,Carlos
-2024-01-05,Teclado Mecânico,Acessórios,350.00,1,Loja Física,Ana
-2024-01-05,Monitor 27",Eletrônicos,1800.00,1,Loja Física,Bruno
-2024-01-08,Cadeira Gamer,Móveis,950.00,1,Online,Daniel
-2024-01-10,Notebook Pro,Eletrônicos,4500.00,1,Online,
-2024-01-12,Headset,Acessórios,299.90,3,Online,Carlos
-2024-01-12,Mouse Wireless,Acessórios,120.50,1,Loja Física,Ana
-2024-01-15,Escrivaninha,Móveis,1100.00,1,Loja Física,Bruno
-2024-01-18,Monitor 27",Eletrônicos,1800.00,2,Online,Daniel
-2024-01-20,Notebook Air,Eletrônicos,3800.00,1,Online,Ana
-2024-01-22,Teclado Mecânico,Acessórios,350.00,2,Online,
-2024-01-25,Notebook Air,Eletrônicos,3800.00,1,Loja Física,Carlos
-2024-01-27,Cadeira Gamer,Móveis,950.00,2,Online,Bruno
-2024-01-30,Headset,Acessórios,299.90,1,Loja Física,Daniel
+2024-02-01,Notebook,Eletrônicos,4200,1,Online,Ana
+2024-02-03,Mouse,Eletrônicos,120,2,Online,Pedro
+2024-02-05,Teclado,Eletrônicos,230,1,Loja Física,Marcos
+2024-02-10,Monitor,Eletrônicos,1800,1,Online,Ana
+2024-02-12,Cadeira Escritório,Móveis,950,1,Loja Física,Carla
+2024-02-15,Notebook,Eletrônicos,4500,1,Online,Ana
+2024-02-18,Fone de Ouvido,Eletrônicos,320,1,Online,Pedro
+2024-02-20,Mesa Escritório,Móveis,1300,1,Loja Física,Carla
+2024-02-22,Notebook,Eletrônicos,4800,1,Online,Ana
+2024-02-25,Mouse,Eletrônicos,110,3,Online,Pedro
+2024-03-01,Notebook,Eletrônicos,5000,1,Online,Ana
+2024-03-03,Teclado,Eletrônicos,210,2,Loja Física,Marcos
+2024-03-05,Monitor,Eletrônicos,1750,1,Online,Ana
+2024-03-08,Cadeira Escritório,Móveis,980,1,Loja Física,Carla
+2024-03-10,Fone de Ouvido,Eletrônicos,300,2,Online,Pedro
+2024-03-12,Notebook,Eletrônicos,5200,1,Online,Ana
+2024-03-15,Mesa Escritório,Móveis,1250,1,Loja Física,Carla
+2024-03-18,Notebook,Eletrônicos,5100,1,Online,Ana
+2024-03-20,Mouse,Eletrônicos,115,4,Online,Pedro
+2024-03-25,Notebook,Eletrônicos,5300,1,Online,Ana
+2024-04-01,Notebook,Eletrônicos,5400,1,Online,Ana
+2024-04-03,Mouse,Eletrônicos,120,5,Online,Pedro
+2024-04-05,Teclado,Eletrônicos,240,2,Loja Física,Marcos
+2024-04-07,Monitor,Eletrônicos,1900,1,Online,Ana
+2024-04-10,Cadeira Escritório,Móveis,1000,1,Loja Física,Carla
+2024-04-12,Notebook,Eletrônicos,5500,1,Online,Ana
+2024-04-14,Fone de Ouvido,Eletrônicos,310,3,Online,Pedro
+2024-04-16,Mesa Escritório,Móveis,1350,1,Loja Física,Carla
+2024-04-18,Notebook,Eletrônicos,5600,1,Online,Ana
+2024-04-20,Mouse,Eletrônicos,118,6,Online,Pedro
+2024-04-22,Notebook,Eletrônicos,5700,1,Online,Ana
+2024-04-25,Teclado,Eletrônicos,220,2,Loja Física,Marcos
+2024-05-01,Notebook,Eletrônicos,5800,1,Online,Ana
+2024-05-03,Monitor,Eletrônicos,1850,1,Online,Ana
+2024-05-05,Mouse,Eletrônicos,125,4,Online,Pedro
+2024-05-07,Cadeira Escritório,Móveis,1020,1,Loja Física,Carla
+2024-05-10,Notebook,Eletrônicos,5900,1,Online,Ana
+2024-05-12,Fone de Ouvido,Eletrônicos,330,2,Online,Pedro
+2024-05-15,Mesa Escritório,Móveis,1400,1,Loja Física,Carla
+2024-05-18,Notebook,Eletrônicos,6000,1,Online,Ana
+2024-05-20,Mouse,Eletrônicos,130,7,Online,Pedro
+2024-05-22,Teclado,Eletrônicos,250,1,Loja Física,Marcos
+2024-05-25,Notebook,Eletrônicos,6100,1,Online,Ana
+
+

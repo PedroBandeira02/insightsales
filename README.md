@@ -1,101 +1,165 @@
-# InsightSales 📊
+📊 InsightSales — Análise de Vendas com Python
+📌 Visão Geral
 
-Mini-SaaS de **Data Science** para análise de dados de vendas e geração de insights de negócio.  
-Este projeto está sendo desenvolvido de forma **incremental**, mês a mês, com foco em **análise de dados**, utilizando **IA como aliada estratégica**.
+O InsightSales é um projeto de análise de dados em Python que simula um pipeline analítico real aplicado a dados de vendas.
+O foco não é apenas calcular métricas, mas entender comportamento, riscos e padrões, transformando dados brutos em insights acionáveis.
 
-> ⚠️ No momento, o projeto encontra-se na **fase de motor analítico (Mês 2)**.  
-> Interface web, banco de dados e modelos avançados serão adicionados progressivamente.
+O projeto evolui em camadas, separando claramente:
 
----
+preparação de dados
 
-## 🎯 Objetivo do Projeto
+análise exploratória
 
-O **InsightSales** tem como objetivo ajudar pequenas e médias empresas a:
-- entender seus dados de vendas
-- identificar padrões
-- gerar métricas de negócio
-- apoiar a tomada de decisão baseada em dados
+detecção de padrões
 
-Tudo isso a partir de **arquivos CSV simples**, sem exigir conhecimento técnico do usuário final.
+geração de insights textuais
 
----
+🎯 Objetivos do Projeto
 
-## 🧠 Escopo Atual (Mês 2)
+Construir um pipeline de dados modular e escalável
 
-Nesta fase, o projeto entrega:
+Aplicar EDA temporal para avaliar crescimento e estabilidade
 
-- Leitura e padronização de dados de vendas
-- Limpeza básica dos dados
-- Cálculo de métricas essenciais de negócio:
-  - faturamento total
-  - ticket médio
-  - vendas por produto
-  - vendas ao longo do tempo
-- Estrutura modular e reutilizável do motor analítico
+Avaliar concentração de faturamento por produto, vendedor e canal
 
-❌ Ainda NÃO incluído:
-- Interface web
-- Banco de dados
-- Machine Learning
-- Deploy
+Transformar análises quantitativas em insights claros
 
----
+Simular a estrutura de um projeto real de Data Analytics / Data Science
 
-## 📁 Estrutura do Projeto
+🗂 Estrutura do Projeto
 
 insightsales/
 │
 ├── app/
-│ └── main.py
+│   └── main.py                 # Orquestra o pipeline e gera os insights finais
 │
 ├── data/
-│ └── raw/
+│   └── raw/
+│       └── vendas_exemplo.csv  # Base de dados simulada
 │
 ├── engine/
-│ ├── init.py
-│ ├── load_data.py
-│ ├── clean_data.py
-│ └── metrics.py
+│   ├── load_data.py            # Carregamento e padronização de dados
+│   ├── clean_data.py           # Limpeza básica e tratamento de inconsistências
+│   ├── metrics.py              # Métricas descritivas (base do projeto)
+│   │
+│   ├── eda/
+│   │   ├── temporal.py         # Análise temporal (crescimento, variação, picos)
+│   │   └── distribution.py     # Análise de distribuição e concentração
+│   │
+│   └── insights/
+│       └── generator.py        # Geração de insights textuais
 │
-├── notebooks/
-│ └── eda_mes2.ipynb
-│
-├── tests/
-│
-├── README.md
-├── requirements.txt
-└── .gitignore
+└── README.md
 
+🔍 Etapas do Pipeline
 
----
+1️⃣ Preparação dos Dados
 
-## ▶️ Como Executar (local)
+Leitura do CSV
 
-### 1️⃣ Criar ambiente virtual
-```bash
-python -m venv venv
-venv\Scripts\activate
+Padronização de nomes de colunas
 
-2️⃣ Instalar dependências
-pip install -r requirements.txt
+Remoção de linhas inválidas ou inconsistentes
 
-3️⃣ Executar o projeto
+Garantia de tipos de dados adequados
+
+📁 Módulos: load_data.py, clean_data.py
+
+2️⃣ Métricas Descritivas
+
+Faturamento total
+
+Ticket médio
+
+Faturamento por produto, vendedor e canal
+
+Essas métricas servem como base analítica, mas não são o foco final do projeto.
+
+📁 Módulo: metrics.py
+
+3️⃣ Análise Temporal
+
+Avalia o comportamento das vendas ao longo do tempo:
+
+faturamento e quantidade mensal
+
+variação mês a mês (absoluta e percentual)
+
+estabilidade do crescimento
+
+detecção de picos
+
+alertas de crescimento irregular
+
+📁 Módulo: eda/temporal.py
+
+4️⃣ Análise de Distribuição
+
+Avalia concentração de faturamento, identificando riscos como:
+
+dependência de poucos produtos
+
+dependência de poucos vendedores
+
+concentração excessiva em determinados canais
+
+Utiliza participação percentual e acumulada (Pareto).
+
+📁 Módulo: eda/distribution.py
+
+5️⃣ Geração de Insights
+
+Transforma os resultados das análises em insights textuais objetivos, por exemplo:
+
+comportamento estável ou irregular
+
+presença ou ausência de concentração relevante
+
+riscos estruturais do faturamento
+
+📁 Módulo: insights/generator.py
+
+▶️ Como Executar o Projeto
+
+Ative o ambiente virtual
+
+Instale as dependências (pandas)
+
+Execute o main.py:
+
 python app/main.py
 
-📊 Formato esperado do CSV
-Coluna	Descrição
-data	Data da venda
-categoria Categoria do produto. Exemplo: móveis
-produto	Nome do produto
-valor	Valor da venda
-quantidade Quantidade de produtos por venda
-canal_de_venda Canal utilizado para a venda
-vendedor Nome do vendedor
+Saída esperada:
 
+Lista de insights gerados automaticamente a partir dos dados
 
-👤 Autor
+🧠 Principais Conceitos Aplicados
 
-Projeto desenvolvido por Pedro Arantes,
-como parte de um plano estruturado de estudos em Data Science.
+Programação modular em Python
 
+Análise Exploratória de Dados (EDA)
+
+Análise temporal
+
+Concentração e efeito Pareto
+
+Separação de responsabilidades
+
+Pipeline analítico orientado a insights
+
+🚀 Próximos Passos
+
+Visualizações (matplotlib / seaborn)
+
+Dashboard interativo
+
+Conexão com banco de dados
+
+Automatização do pipeline
+
+Aplicação em dados reais
+
+📌 Observação Final
+
+Este projeto foi desenvolvido com foco em clareza, organização e evolução progressiva, simulando a construção de um pipeline analítico real — do dado bruto ao insight.
 

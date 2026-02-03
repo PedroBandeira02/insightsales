@@ -1,49 +1,63 @@
+import sys
+from pathlib import Path
+
+# Garante que a raiz do projeto esteja no PYTHONPATH
+ROOT_DIR = Path(__file__).resolve().parents[1]
+sys.path.append(str(ROOT_DIR))
+
 from engine.load_data import read_csv, standardize_columns
 from engine.clean_data import clean_df
-from engine.metrics import (
-    calcula_faturamento_total,
-    calcula_faturamento_por_produto,
-    calcula_ticket_medio,
-    calcula_quantidade_por_categoria_produto,
-    calcula_canal_mais_utilizado,
-    calcula_faturamento_por_vendedor,
-    faturamento_e_vendas_por_mes
+
+from engine.eda.temporal import analise_temporal
+from engine.eda.distribution import (
+    distribuicao_por_produto,
+    distribuicao_por_vendedor,
+    distribuicao_por_canal
 )
+
+from engine.insights.generator import gerar_insights
+
 
 def main():
     path = "data/raw/vendas_exemplo.csv"
 
+    # =========================
+    # ETAPA 1 — PREPARAÇÃO (MÊS 2)
+    # =========================
     df = read_csv(path)
     df = standardize_columns(df)
-
     df = clean_df(df)
 
-    faturamento_total = calcula_faturamento_total(df)
-    ticket_medio = calcula_ticket_medio(df)
-    canal_mais_utilizado = calcula_canal_mais_utilizado(df)
+    # =========================
+    # ETAPA 2 — EDA (MÊS 3)
+    # =========================
+    resultado_temporal = analise_temporal(df, coluna_data="data_venda")
 
-    faturamento_produto = calcula_faturamento_por_produto(df)
-    faturamento_vendedor = calcula_faturamento_por_vendedor(df)
-    quantidade_categoria_produto = calcula_quantidade_por_categoria_produto(df)
-    resumo_mensal = faturamento_e_vendas_por_mes(df)
+    dist_produto = distribuicao_por_produto(df)
+    dist_vendedor = distribuicao_por_vendedor(df)
+    dist_canal = distribuicao_por_canal(df)
 
-    print("\n📊 INSIGHTSALES — RESUMO GERAL\n")
+    # =========================
+    # ETAPA 3 — INSIGHTS (MÊS 3)
+    # =========================
+    insights = gerar_insights(
+        resultado_temporal,
+        dist_produto,
+        dist_vendedor,
+        dist_canal
+    )
 
-    print(f"💰 Faturamento total: R$ {faturamento_total:,.2f}")
-    print(f"🧾 Ticket médio: R$ {ticket_medio:,.2f}")
-    print(f"🛒 Canal mais utilizado: {canal_mais_utilizado}")
+    # =========================
+    # SAÍDA FINAL
+    # =========================
+    print("\n🧠 INSIGHTS GERADOS\n")
 
-    print("\n📦 Faturamento por produto:")
-    print(faturamento_produto)
+    for i, insight in enumerate(insights, start=1):
+        print(f"{i}. {insight}")
 
-    print("\n👤 Faturamento por vendedor:")
-    print(faturamento_vendedor)
-
-    print("\n📊 Quantidade vendida por categoria e produto:")
-    print(quantidade_categoria_produto)
-
-    print("\n📅 Resumo mensal (faturamento e número de vendas):")
-    print(resumo_mensal)
 
 if __name__ == "__main__":
     main()
+
+
+
