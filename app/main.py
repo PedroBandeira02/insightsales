@@ -1,63 +1,63 @@
-import sys
-from pathlib import Path
+from engine.load_data import load_data
+from engine.clean_data import clean_data
 
-# Garante que a raiz do projeto esteja no PYTHONPATH
-ROOT_DIR = Path(__file__).resolve().parents[1]
-sys.path.append(str(ROOT_DIR))
-
-from engine.load_data import read_csv, standardize_columns
-from engine.clean_data import clean_df
+from engine.db.schema import create_tables
+from engine.db.ingest import register_upload, insert_sales
+from engine.db.queries import sales_over_time, sales_by_category
 
 from engine.eda.temporal import analise_temporal
-from engine.eda.distribution import (
-    distribuicao_por_produto,
-    distribuicao_por_vendedor,
-    distribuicao_por_canal
-)
-
-from engine.insights.generator import gerar_insights
+from engine.eda.distribution import distribuicao_por_categoria
 
 
 def main():
-    path = "data/raw/vendas_exemplo.csv"
+    # 1. Garante que o schema exista
+    create_tables()
 
-    # =========================
-    # ETAPA 1 — PREPARAÇÃO (MÊS 2)
-    # =========================
-    df = read_csv(path)
-    df = standardize_columns(df)
-    df = clean_df(df)
+    # 2. Carrega os dados brutos
+    df_raw = load_data("data/raw/vendas_exemplo.csv")
 
-    # =========================
-    # ETAPA 2 — EDA (MÊS 3)
-    # =========================
-    resultado_temporal = analise_temporal(df, coluna_data="data_venda")
+    # 3. Limpa os dados
+    df_clean = clean_data(df_raw)
 
-    dist_produto = distribuicao_por_produto(df)
-    dist_vendedor = distribuicao_por_vendedor(df)
-    dist_canal = distribuicao_por_canal(df)
-
-    # =========================
-    # ETAPA 3 — INSIGHTS (MÊS 3)
-    # =========================
-    insights = gerar_insights(
-        resultado_temporal,
-        dist_produto,
-        dist_vendedor,
-        dist_canal
+    # 4. Registra o upload
+    upload_id = register_upload(
+        arquivo_nome="vendas_exemplo.csv",
+        linhas_inseridas=len(df_clean),
+        observacao="Carga inicial do InsightSales"
     )
 
-    # =========================
-    # SAÍDA FINAL
-    # =========================
-    print("\n🧠 INSIGHTS GERADOS\n")
+    # 5. Insere as vendas no banco
+    insert_sales(df_clean, upload_id)
 
-    for i, insight in enumerate(insights, start=1):
-        print(f"{i}. {insight}")
+    # 6. Query SQL → análise temporal
+    df_temporal = sales_over_time()
+    resultado_temporal = analise_temporal(df_temporal)
+
+    print("\n📊 Análise Temporal — Alertas:")
+    for alerta in resultado_temporal["alertas"]:
+        print(f"- {alerta}")
+
+    print("\n🔥 Picos de faturamento:")
+    print(resultado_temporal["picos_faturamento"])
+
+    # 7. Query SQL → distribuição por categoria
+    df_categoria = sales_by_category()
+    resultado_dist = distribuicao_por_categoria(df_categoria)
+
+    print("\n📊 Distribuição de faturamento por categoria — Alertas:")
+    for alerta in resultado_dist["alertas"]:
+        print(f"- {alerta}")
+
+    print("\n🏆 Ranking de faturamento por categoria:")
+    print(resultado_dist["faturamento_por_dimensao"])
 
 
 if __name__ == "__main__":
     main()
+
+
+
+
 
 
 

@@ -17,39 +17,44 @@ Perguntas que este módulo NÃO responde:
 """
 import pandas as pd
 
-def nucleo (df, cat_col, limiar_unico= 0.40, limiar_top3= 0.70):
+
+def nucleo_distribuicao(
+    df,
+    col_dimensao,
+    col_faturamento="faturamento_total",
+    limiar_unico=0.40,
+    limiar_top3=0.70
+):
     analise = {}
-    deteccao_concentracao = []
+    alertas = []
+
     df_temp = df.copy()
 
-    df_temp['faturamento'] = df_temp['quantidade'] * df_temp['preco_unitario']
-    faturamento_por_dimensao = df_temp.groupby(cat_col)['faturamento'].sum().sort_values(ascending= False)
-    participacao_por_dimensao = faturamento_por_dimensao / faturamento_por_dimensao.sum()
-    participacao_acumulada = participacao_por_dimensao.cumsum()
-
-    if faturamento_por_dimensao.empty:
+    if df_temp.empty:
         analise["alertas"] = ["Distribuição vazia para a dimensão analisada."]
         return analise
 
+    faturamento_por_dimensao = (
+        df_temp
+        .set_index(col_dimensao)[col_faturamento]
+        .sort_values(ascending=False)
+    )
+
+    participacao_por_dimensao = faturamento_por_dimensao / faturamento_por_dimensao.sum()
+    participacao_acumulada = participacao_por_dimensao.cumsum()
+
     if participacao_por_dimensao.iloc[0] > limiar_unico:
-        deteccao_concentracao.append(f"Alta dependência de um único {cat_col}.")
-    
+        alertas.append(f"Alta dependência de um único {col_dimensao}.")
+
     if participacao_por_dimensao.iloc[:3].sum() > limiar_top3:
-        deteccao_concentracao.append(f"Alta concentração de faturamento nos três principais {cat_col}.")
-    
-    analise['faturamento_por_dimensao'] = faturamento_por_dimensao
-    analise['participacao_por_dimensao'] = participacao_por_dimensao
-    analise['participacao_acumulada'] = participacao_acumulada
-    analise['alertas'] = deteccao_concentracao
+        alertas.append(f"Alta concentração de faturamento nos três principais {col_dimensao}s.")
+
+    analise["faturamento_por_dimensao"] = faturamento_por_dimensao
+    analise["participacao_por_dimensao"] = participacao_por_dimensao
+    analise["participacao_acumulada"] = participacao_acumulada
+    analise["alertas"] = alertas
 
     return analise
 
-def distribuicao_por_produto (df):
-    return nucleo (df, cat_col='produto')
-
-def distribuicao_por_vendedor (df):
-    return nucleo (df, cat_col='vendedor')
-
-def distribuicao_por_canal (df):
-    return nucleo (df, cat_col='canal_venda')
-    
+def distribuicao_por_categoria(df):
+    return nucleo_distribuicao(df, col_dimensao="categoria")

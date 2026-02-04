@@ -3,7 +3,7 @@ from datetime import datetime
 
 text_cols = ['produto', 'categoria', 'canal_venda','vendedor']
 numeric_cols = ['preco_unitario', 'quantidade']
-def clean_df (df):
+def clean_data (df):
     df = df.drop_duplicates()
     df = df.dropna(how= 'all')
     df['data_venda'] = pd.to_datetime(df['data_venda'], errors= 'coerce')

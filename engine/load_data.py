@@ -1,6 +1,6 @@
 import pandas as pd
 
-def read_csv (path):   
+def load_data (path):   
     df_vendas = pd.read_csv(path, skipinitialspace= True, na_values= ['?', 'NA', 'N/A'], encoding= 'UTF-8')
     return df_vendas
 

@@ -40,43 +40,42 @@ def verificador_de_coluna_temporal(df, coluna_data):
 
     return resultado
 
-def analise_temporal (df, coluna_data):
+def analise_temporal(df_mensal):
     analise = {}
     alertas = []
-    df_temp = df.copy()
-    coluna_data_convertida = pd.to_datetime(df[coluna_data], errors= 'coerce')
 
-    valores_nulos = coluna_data_convertida.isna().sum()
-    if valores_nulos > 0:
-        alertas.append( f"{valores_nulos} registros com data inválida foram ignorados na análise temporal.")
+    # df_mensal já vem com:
+    # data_venda | faturamento_total | numero_vendas
 
-    df_temp["data_convertida"] = coluna_data_convertida
-    df_temp = df_temp.dropna(subset=["data_convertida"])
-    df_temp['faturamento'] =  df_temp['preco_unitario'] * df_temp['quantidade']
+    df_mensal = df_mensal.sort_values("data_venda").copy()
 
-    df_mensal = (df_temp.groupby(pd.Grouper(key= 'data_convertida', freq= 'ME')).agg(faturamento_mensal = ('faturamento', 'sum'), quantidade_mensal = ('quantidade', 'sum')).sort_index())
-    df_mensal['var_faturamento'] = df_mensal['faturamento_mensal'].diff()
-    df_mensal["var_quantidade"] = df_mensal["quantidade_mensal"].diff()
-    df_mensal["var_faturamento_pct"] = df_mensal["faturamento_mensal"].pct_change()
-    df_mensal["var_quantidade_pct"] = df_mensal["quantidade_mensal"].pct_change()
+    # Variações (isso AINDA é análise, não SQL)
+    df_mensal["var_faturamento"] = df_mensal["faturamento_total"].diff()
+    df_mensal["var_faturamento_pct"] = df_mensal["faturamento_total"].pct_change()
 
-    std_faturamento = df_mensal['var_faturamento_pct'].dropna().std()
-    cv_qtd = (df_mensal["quantidade_mensal"].std() /df_mensal["quantidade_mensal"].mean())
+    df_mensal["var_quantidade"] = df_mensal["numero_vendas"].diff()
+    df_mensal["var_quantidade_pct"] = df_mensal["numero_vendas"].pct_change()
+
+    # Alertas (continua igual em espírito)
+    std_faturamento = df_mensal["var_faturamento_pct"].dropna().std()
+    cv_qtd = df_mensal["numero_vendas"].std() / df_mensal["numero_vendas"].mean()
+
     if len(df_mensal) < 4:
-        alertas.append('Período curto para avaliar estabilidade de crescimento')
+        alertas.append("Período curto para avaliar estabilidade de crescimento")
     else:
         if std_faturamento > 0.3:
-            alertas.append('Crescimento de faturamento irregular ao longo do tempo.')
+            alertas.append("Crescimento de faturamento irregular ao longo do tempo.")
         if cv_qtd > 0.30:
-            alertas.append("Volume mensal apresenta alta variabilidade relativa.")
+            alertas.append("Volume apresenta alta variabilidade relativa.")
 
-    picos = df_mensal['faturamento_mensal'].sort_values(ascending= False).head(3)
+    picos = df_mensal.sort_values("faturamento_total", ascending=False).head(3)
 
-    analise["mensal"] = df_mensal
+    analise["temporal"] = df_mensal
     analise["picos_faturamento"] = picos
     analise["alertas"] = alertas
 
     return analise
+
    
 
 
