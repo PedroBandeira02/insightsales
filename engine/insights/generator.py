@@ -5,50 +5,78 @@ Transformar os resultados dos módulos de EDA (temporal e distribution)
 em insights textuais objetivos, sem recalcular métricas ou acessar dados brutos.
 """
 
-
-def gerar_insights(resultado_temporal, dist_produto, dist_vendedor, dist_canal):
-
+def gerar_insights(
+    resultado_temporal: dict,
+    resultado_distribuicao: dict
+) -> list[str]:
+    """
+    Gera insights textuais a partir das regras temporais e de distribuição.
+    """
     insights = []
 
-    alertas_temporais = resultado_temporal.get("alertas", [])
+    # ======================================================
+    # INSIGHTS TEMPORAIS
+    # ======================================================
 
-    if alertas_temporais:
-        for alerta in alertas_temporais:
-            insights.append(alerta)
+    volatilidade = resultado_temporal.get("volatilidade", {})
+    previsibilidade = resultado_temporal.get("previsibilidade", {})
+    quedas = resultado_temporal.get("quedas_consecutivas", {})
+
+    # Volatilidade
+    if volatilidade.get("risco"):
+        insights.append(
+            "O crescimento do faturamento apresenta comportamento irregular ao longo do tempo."
+        )
     else:
         insights.append(
-            "O faturamento apresentou comportamento relativamente estável no período analisado."
+            "O crescimento do faturamento apresenta comportamento relativamente estável."
         )
 
-    alertas_produto = dist_produto.get("alertas", [])
-
-    if alertas_produto:
-        for alerta in alertas_produto:
-            insights.append(alerta)
+    # Previsibilidade
+    if previsibilidade.get("risco"):
+        insights.append(
+            "O volume de vendas apresenta baixa previsibilidade, indicando instabilidade operacional."
+        )
     else:
         insights.append(
-            "A distribuição de faturamento por produto não apresenta concentração relevante."
+            "O volume de vendas apresenta comportamento previsível na maior parte do período."
         )
 
-    alertas_vendedor = dist_vendedor.get("alertas", [])
-
-    if alertas_vendedor:
-        for alerta in alertas_vendedor:
-            insights.append(alerta)
-    else:
+    # Quedas consecutivas
+    if quedas.get("risco"):
+        qtd = quedas.get("qtd_quedas_consecutivas", 0)
         insights.append(
-            "A distribuição de faturamento por vendedor não apresenta concentração relevante."
+            f"Foram identificadas {qtd} quedas consecutivas no crescimento do faturamento."
         )
 
-    alertas_canal = dist_canal.get("alertas", [])
+    # ======================================================
+    # INSIGHTS DE DISTRIBUIÇÃO
+    # ======================================================
 
-    if alertas_canal:
-        for alerta in alertas_canal:
-            insights.append(alerta)
+    dependencia = resultado_distribuicao.get("dependencia_unica", {})
+    concentracao = resultado_distribuicao.get("concentracao_top_n", {})
+
+    # Dependência única
+    if dependencia.get("risco"):
+        insights.append(
+            "Há alta dependência de um único elemento no faturamento, indicando risco estrutural."
+        )
     else:
         insights.append(
-            "A distribuição de faturamento por canal não apresenta concentração relevante."
+            "Não foi identificada dependência excessiva de um único elemento no faturamento."
+        )
+
+    # Concentração Top N
+    if concentracao.get("risco"):
+        insights.append(
+            "O faturamento está excessivamente concentrado em poucos elementos."
+        )
+    else:
+        insights.append(
+            "A distribuição de faturamento apresenta boa diversificação."
         )
 
     return insights
+
+
 

@@ -3,9 +3,7 @@ from engine.db.connection import get_connection
 
 
 def sales_over_time():
-    """
-    Retorna faturamento total e número de vendas por dia.
-    """
+
     query = """
         SELECT
             data_venda,

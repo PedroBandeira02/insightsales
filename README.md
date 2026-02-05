@@ -1,165 +1,198 @@
-📊 InsightSales — Análise de Vendas com Python
+📊 InsightSales — Análise Inteligente de Vendas com Python
 📌 Visão Geral
 
 O InsightSales é um projeto de análise de dados em Python que simula um pipeline analítico real aplicado a dados de vendas.
-O foco não é apenas calcular métricas, mas entender comportamento, riscos e padrões, transformando dados brutos em insights acionáveis.
+O foco do projeto não é apenas calcular métricas, mas avaliar comportamento, risco e padrões, transformando dados históricos em insights acionáveis.
 
-O projeto evolui em camadas, separando claramente:
-
-preparação de dados
-
-análise exploratória
-
-detecção de padrões
-
-geração de insights textuais
+O sistema foi construído com separação clara de responsabilidades, permitindo evolução gradual para Machine Learning e uso em contexto de produto analítico ou SaaS.
 
 🎯 Objetivos do Projeto
 
 Construir um pipeline de dados modular e escalável
 
-Aplicar EDA temporal para avaliar crescimento e estabilidade
+Persistir dados históricos de vendas em banco relacional
 
-Avaliar concentração de faturamento por produto, vendedor e canal
+Aplicar estatística descritiva e temporal de forma explícita
 
-Transformar análises quantitativas em insights claros
+Detectar riscos estruturais e comportamentais
 
-Simular a estrutura de um projeto real de Data Analytics / Data Science
+Gerar insights textuais automáticos a partir de regras
+
+Simular a arquitetura de um produto real de Data Analytics / Data Science
+
+🧠 Abordagem Analítica
+
+O InsightSales segue o princípio:
+
+medir → interpretar → comunicar
+
+Isso significa que o projeto separa claramente:
+
+estatística (cálculo)
+
+regras (decisão)
+
+insights (linguagem humana)
+
+Essa separação evita análises implícitas, facilita testes e prepara o sistema para evolução com modelos de Machine Learning.
 
 🗂 Estrutura do Projeto
-
 insightsales/
 │
 ├── app/
-│   └── main.py                 # Orquestra o pipeline e gera os insights finais
+│   └── main.py                # Orquestra todo o pipeline
+│
+├── engine/
+│   ├── load_data.py           # Leitura dos dados brutos
+│   ├── clean_data.py          # Limpeza e padronização
+│
+│   ├── db/
+│   │   ├── schema.py          # Criação das tabelas
+│   │   ├── ingest.py          # Inserção e registro de uploads
+│   │   └── queries.py         # Queries analíticas
+│
+│   ├── statistics/
+│   │   ├── temporal.py        # Estatísticas temporais explícitas
+│   │   └── distribution.py   # Estatísticas de concentração
+│
+│   ├── rules/
+│   │   ├── temporal_rules.py      # Regras de risco temporal
+│   │   └── distribution_rules.py # Regras de risco estrutural
+│
+│   └── insights/
+│       └── generator.py       # Geração de insights textuais
 │
 ├── data/
 │   └── raw/
-│       └── vendas_exemplo.csv  # Base de dados simulada
-│
-├── engine/
-│   ├── load_data.py            # Carregamento e padronização de dados
-│   ├── clean_data.py           # Limpeza básica e tratamento de inconsistências
-│   ├── metrics.py              # Métricas descritivas (base do projeto)
-│   │
-│   ├── eda/
-│   │   ├── temporal.py         # Análise temporal (crescimento, variação, picos)
-│   │   └── distribution.py     # Análise de distribuição e concentração
-│   │
-│   └── insights/
-│       └── generator.py        # Geração de insights textuais
+│       └── vendas_exemplo.csv
 │
 └── README.md
 
 🔍 Etapas do Pipeline
+1️⃣ Ingestão e Persistência
 
-1️⃣ Preparação dos Dados
+Leitura do arquivo CSV
 
-Leitura do CSV
+Limpeza e padronização dos dados
 
-Padronização de nomes de colunas
+Registro de cada upload
 
-Remoção de linhas inválidas ou inconsistentes
+Persistência em banco SQLite
 
-Garantia de tipos de dados adequados
+Histórico preservado para análises futuras
 
-📁 Módulos: load_data.py, clean_data.py
+2️⃣ Estatística Aplicada
+Estatísticas Temporais
 
-2️⃣ Métricas Descritivas
+variação absoluta
 
-Faturamento total
+variação percentual
 
-Ticket médio
+coeficiente de variação
 
-Faturamento por produto, vendedor e canal
+índice de volatilidade
 
-Essas métricas servem como base analítica, mas não são o foco final do projeto.
+média móvel
 
-📁 Módulo: metrics.py
+Essas estatísticas medem comportamento, não tomam decisões.
 
-3️⃣ Análise Temporal
+Estatísticas de Distribuição
 
-Avalia o comportamento das vendas ao longo do tempo:
+participação percentual
 
-faturamento e quantidade mensal
+participação acumulada
 
-variação mês a mês (absoluta e percentual)
+concentração dos top N
 
-estabilidade do crescimento
+Utilizadas para avaliar dependência estrutural do faturamento.
 
-detecção de picos
+3️⃣ Regras Analíticas
 
-alertas de crescimento irregular
+As regras interpretam as estatísticas e classificam riscos, por exemplo:
 
-📁 Módulo: eda/temporal.py
+crescimento estável ou irregular
 
-4️⃣ Análise de Distribuição
+previsibilidade do volume
 
-Avalia concentração de faturamento, identificando riscos como:
+quedas consecutivas
 
-dependência de poucos produtos
+dependência excessiva de poucos itens
 
-dependência de poucos vendedores
+As regras:
 
-concentração excessiva em determinados canais
+não recalculam estatística
 
-Utiliza participação percentual e acumulada (Pareto).
+não acessam dados brutos
 
-📁 Módulo: eda/distribution.py
+retornam apenas classificações e flags
 
-5️⃣ Geração de Insights
+4️⃣ Geração de Insights
 
-Transforma os resultados das análises em insights textuais objetivos, por exemplo:
+O módulo de insights traduz os resultados das regras em linguagem natural, produzindo saídas como:
 
-comportamento estável ou irregular
+avaliação de estabilidade do crescimento
 
-presença ou ausência de concentração relevante
+alertas de risco estrutural
 
-riscos estruturais do faturamento
+indícios de instabilidade operacional
 
-📁 Módulo: insights/generator.py
+Nenhuma decisão é tomada nessa camada — apenas comunicação clara.
 
-▶️ Como Executar o Projeto
+▶️ Como Executar
 
 Ative o ambiente virtual
 
-Instale as dependências (pandas)
+Instale as dependências:
 
-Execute o main.py:
+pip install -r requirements.txt
+
+
+Execute o projeto:
 
 python app/main.py
 
-Saída esperada:
+Saída esperada
 
-Lista de insights gerados automaticamente a partir dos dados
+Persistência dos dados no banco
 
-🧠 Principais Conceitos Aplicados
+Avaliações estatísticas aplicadas
+
+Lista de insights gerados automaticamente
+
+🧩 Principais Conceitos Aplicados
 
 Programação modular em Python
 
-Análise Exploratória de Dados (EDA)
+Análise exploratória orientada a produto
 
-Análise temporal
-
-Concentração e efeito Pareto
+Estatística aplicada a comportamento e risco
 
 Separação de responsabilidades
 
-Pipeline analítico orientado a insights
+Arquitetura preparada para Machine Learning
 
-🚀 Próximos Passos
+Geração automática de insights
 
-Visualizações (matplotlib / seaborn)
+🚀 Evolução Natural do Projeto
 
-Dashboard interativo
+A arquitetura do InsightSales permite evolução direta para:
 
-Conexão com banco de dados
+testes automatizados
 
-Automatização do pipeline
+dashboards e visualizações
 
-Aplicação em dados reais
+modelos de Machine Learning
+
+sistema SaaS com múltiplos usuários
+
+monitoramento contínuo de métricas
+
+Nada precisa ser reescrito — apenas estendido.
 
 📌 Observação Final
 
-Este projeto foi desenvolvido com foco em clareza, organização e evolução progressiva, simulando a construção de um pipeline analítico real — do dado bruto ao insight.
+Este projeto foi desenvolvido com foco em clareza, rastreabilidade analítica e maturidade arquitetural, simulando a construção de um produto real de análise de dados — do dado bruto ao insight acionável.
 
+Ele representa não apenas um estudo técnico, mas uma forma de pensar dados como produto.
+
+Preparação para Machine Learning

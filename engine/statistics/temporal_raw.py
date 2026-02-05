@@ -1,24 +1,4 @@
-"""
-Responsabilidade do módulo temporal.py:
-
-Este módulo analisa o comportamento dos dados ao longo do tempo,
-com foco em identificar padrões temporais básicos, como tendência,
-regularidade, picos e possíveis sinais de sazonalidade.
-
-Perguntas que este módulo responde:
-- O faturamento varia significativamente ao longo do tempo?
-- Existem picos isolados que distorcem a média?
-- O crescimento observado é consistente ou irregular?
-- O volume de vendas acompanha o faturamento?
-
-Perguntas que este módulo NÃO responde:
-- Qual decisão de negócio tomar
-- Previsão de vendas futuras
-- Avaliação de desempenho individual
-"""
-
 import pandas as pd
-
 def verificador_de_coluna_temporal(df, coluna_data):
     resultado = {
         "existe_coluna": False,
@@ -44,19 +24,14 @@ def analise_temporal(df_mensal):
     analise = {}
     alertas = []
 
-    # df_mensal já vem com:
-    # data_venda | faturamento_total | numero_vendas
-
     df_mensal = df_mensal.sort_values("data_venda").copy()
 
-    # Variações (isso AINDA é análise, não SQL)
     df_mensal["var_faturamento"] = df_mensal["faturamento_total"].diff()
     df_mensal["var_faturamento_pct"] = df_mensal["faturamento_total"].pct_change()
 
     df_mensal["var_quantidade"] = df_mensal["numero_vendas"].diff()
     df_mensal["var_quantidade_pct"] = df_mensal["numero_vendas"].pct_change()
 
-    # Alertas (continua igual em espírito)
     std_faturamento = df_mensal["var_faturamento_pct"].dropna().std()
     cv_qtd = df_mensal["numero_vendas"].std() / df_mensal["numero_vendas"].mean()
 

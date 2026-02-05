@@ -4,56 +4,91 @@ from engine.clean_data import clean_data
 from engine.db.schema import create_tables
 from engine.db.ingest import register_upload, insert_sales
 from engine.db.queries import sales_over_time, sales_by_category
-
-from engine.eda.temporal import analise_temporal
-from engine.eda.distribution import distribuicao_por_categoria
+from engine.statistics.temporal import (
+    variacao_percentual,
+    coeficiente_variacao,
+    indice_volatilidade
+)
+from engine.rules.temporal_rules import (
+    regra_volatilidade,
+    regra_previsibilidade,
+    regra_quedas_consecutivas
+)
+from engine.statistics.distribution import participacao_percentual
+from engine.rules.distribution_rules import (
+    regra_dependencia_unica,
+    regra_concentracao_top_n
+)
+from engine.insights.generator import gerar_insights
 
 
 def main():
-    # 1. Garante que o schema exista
+    # ======================================================
+    # INGESTÃO E PERSISTÊNCIA
+    # ======================================================
+
     create_tables()
 
-    # 2. Carrega os dados brutos
     df_raw = load_data("data/raw/vendas_exemplo.csv")
-
-    # 3. Limpa os dados
     df_clean = clean_data(df_raw)
 
-    # 4. Registra o upload
     upload_id = register_upload(
         arquivo_nome="vendas_exemplo.csv",
         linhas_inseridas=len(df_clean),
         observacao="Carga inicial do InsightSales"
     )
 
-    # 5. Insere as vendas no banco
     insert_sales(df_clean, upload_id)
 
-    # 6. Query SQL → análise temporal
+    # ======================================================
+    # ANÁLISE TEMPORAL
+    # ======================================================
+
     df_temporal = sales_over_time()
-    resultado_temporal = analise_temporal(df_temporal)
 
-    print("\n📊 Análise Temporal — Alertas:")
-    for alerta in resultado_temporal["alertas"]:
-        print(f"- {alerta}")
+    variacao_pct = variacao_percentual(df_temporal["faturamento_total"])
+    volatilidade = indice_volatilidade(df_temporal["faturamento_total"])
+    cv_volume = coeficiente_variacao(df_temporal["numero_vendas"])
 
-    print("\n🔥 Picos de faturamento:")
-    print(resultado_temporal["picos_faturamento"])
+    resultado_temporal = {
+        "volatilidade": regra_volatilidade(volatilidade),
+        "previsibilidade": regra_previsibilidade(cv_volume),
+        "quedas_consecutivas": regra_quedas_consecutivas(variacao_pct)
+    }
 
-    # 7. Query SQL → distribuição por categoria
+    # ======================================================
+    # ANÁLISE DE DISTRIBUIÇÃO — CATEGORIA
+    # ======================================================
+
     df_categoria = sales_by_category()
-    resultado_dist = distribuicao_por_categoria(df_categoria)
 
-    print("\n📊 Distribuição de faturamento por categoria — Alertas:")
-    for alerta in resultado_dist["alertas"]:
-        print(f"- {alerta}")
+    participacao_categoria = participacao_percentual(
+        df_categoria.set_index("categoria")["faturamento_total"]
+    )
 
-    print("\n🏆 Ranking de faturamento por categoria:")
-    print(resultado_dist["faturamento_por_dimensao"])
+    resultado_distribuicao = {
+        "dependencia_unica": regra_dependencia_unica(participacao_categoria),
+        "concentracao_top_n": regra_concentracao_top_n(participacao_categoria)
+    }
+
+    # ======================================================
+    # GERAÇÃO DE INSIGHTS
+    # ======================================================
+
+    insights = gerar_insights(
+        resultado_temporal=resultado_temporal,
+        resultado_distribuicao=resultado_distribuicao
+    )
+
+    print("\n🧠 INSIGHTS GERADOS PELO INSIGHTSALES:\n")
+    for insight in insights:
+        print(f"- {insight}")
 
 
 if __name__ == "__main__":
     main()
+
+
 
 
 

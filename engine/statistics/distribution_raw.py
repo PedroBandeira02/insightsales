@@ -1,20 +1,3 @@
-"""
-Responsabilidade do módulo distribution.py:
-
-Este módulo analisa a distribuição do faturamento entre categorias
-(produtos, vendedores, canais), com o objetivo de identificar
-níveis de concentração e dependência.
-
-Perguntas que este módulo responde:
-- O faturamento está concentrado em poucos elementos?
-- Existe evidência de efeito Pareto?
-- A distribuição é equilibrada ou dominada por poucos itens?
-
-Perguntas que este módulo NÃO responde:
-- Qual decisão estratégica tomar
-- Evolução temporal
-- Previsões futuras
-"""
 import pandas as pd
 
 
