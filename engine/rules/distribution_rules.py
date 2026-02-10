@@ -1,21 +1,10 @@
 import pandas as pd
 
-
 def regra_dependencia_unica(
     participacao: pd.Series,
     limite: float = 0.40
 ) -> dict:
-    """
-    Avalia se existe alta dependência de um único item.
 
-    Parâmetros:
-    - participacao: Series com participação percentual (0–1)
-    - limite: percentual máximo aceitável para um único item
-
-    Retorno:
-    - nível de concentração
-    - flag de risco
-    """
     if participacao is None or participacao.empty:
         return {
             "nivel": "indefinido",
@@ -43,18 +32,7 @@ def regra_concentracao_top_n(
     n: int = 3,
     limite: float = 0.70
 ) -> dict:
-    """
-    Avalia se há concentração excessiva nos top N itens.
 
-    Parâmetros:
-    - participacao: Series com participação percentual (0–1)
-    - n: quantidade de itens no topo
-    - limite: percentual máximo aceitável para os top N
-
-    Retorno:
-    - nível de concentração
-    - flag de risco
-    """
     if participacao is None or participacao.empty:
         return {
             "nivel": "indefinido",

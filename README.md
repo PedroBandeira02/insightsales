@@ -1,198 +1,133 @@
-📊 InsightSales — Análise Inteligente de Vendas com Python
-📌 Visão Geral
+# InsightSales
 
-O InsightSales é um projeto de análise de dados em Python que simula um pipeline analítico real aplicado a dados de vendas.
-O foco do projeto não é apenas calcular métricas, mas avaliar comportamento, risco e padrões, transformando dados históricos em insights acionáveis.
+InsightSales é um mini-SaaS de **análise de vendas e geração de insights**, construído de forma incremental com foco em **engenharia de dados, estatística aplicada e machine learning**.
 
-O sistema foi construído com separação clara de responsabilidades, permitindo evolução gradual para Machine Learning e uso em contexto de produto analítico ou SaaS.
+O projeto foi estruturado para refletir um **pipeline real de dados**, indo do carregamento bruto até a geração de insights acionáveis, com **regras determinísticas e ML coexistindo**.
 
-🎯 Objetivos do Projeto
+---
 
-Construir um pipeline de dados modular e escalável
+## 🎯 Objetivo do projeto
 
-Persistir dados históricos de vendas em banco relacional
+- Analisar o comportamento de vendas ao longo do tempo
+- Detectar padrões de risco, concentração e volatilidade
+- Gerar insights explicáveis para apoio à decisão
+- Explorar Machine Learning como **camada complementar**, não substituta das regras
 
-Aplicar estatística descritiva e temporal de forma explícita
+---
 
-Detectar riscos estruturais e comportamentais
+## 🧠 Arquitetura geral
 
-Gerar insights textuais automáticos a partir de regras
+load_data
+→ clean_data
+→ persistência em SQL
+→ agregações via SQL
+→ estatística aplicada
+→ regras determinísticas
+→ machine learning (opcional)
+→ geração de insights
 
-Simular a arquitetura de um produto real de Data Analytics / Data Science
 
-🧠 Abordagem Analítica
+O ML **não atua sobre dados brutos**, mas sobre **dados já agregados e entendidos**, garantindo robustez e interpretabilidade.
 
-O InsightSales segue o princípio:
+---
 
-medir → interpretar → comunicar
+## 📦 Estrutura do projeto
 
-Isso significa que o projeto separa claramente:
+engine/
+├── load_data.py
+├── clean_data.py
+├── db/
+│ ├── schema.py
+│ ├── ingest.py
+│ └── queries.py
+├── statistics/
+│ ├── temporal.py
+│ └── distribution.py
+├── rules/
+│ ├── temporal_rules.py
+│ └── distribution_rules.py
+├── insights/
+│ └── generator.py
+└── ml/
+├── features.py
+├── split.py
+├── models.py
+├── predictor.py
+├── evaluation.py
+├── train.py
+└── modelo_insightsales.pkl
 
-estatística (cálculo)
 
-regras (decisão)
+---
 
-insights (linguagem humana)
+## 📊 Camada estatística
 
-Essa separação evita análises implícitas, facilita testes e prepara o sistema para evolução com modelos de Machine Learning.
+A camada estatística calcula métricas como:
+- variação percentual
+- volatilidade
+- coeficiente de variação
+- participação percentual
 
-🗂 Estrutura do Projeto
-insightsales/
-│
-├── app/
-│   └── main.py                # Orquestra todo o pipeline
-│
-├── engine/
-│   ├── load_data.py           # Leitura dos dados brutos
-│   ├── clean_data.py          # Limpeza e padronização
-│
-│   ├── db/
-│   │   ├── schema.py          # Criação das tabelas
-│   │   ├── ingest.py          # Inserção e registro de uploads
-│   │   └── queries.py         # Queries analíticas
-│
-│   ├── statistics/
-│   │   ├── temporal.py        # Estatísticas temporais explícitas
-│   │   └── distribution.py   # Estatísticas de concentração
-│
-│   ├── rules/
-│   │   ├── temporal_rules.py      # Regras de risco temporal
-│   │   └── distribution_rules.py # Regras de risco estrutural
-│
-│   └── insights/
-│       └── generator.py       # Geração de insights textuais
-│
-├── data/
-│   └── raw/
-│       └── vendas_exemplo.csv
-│
-└── README.md
+Essas métricas alimentam tanto:
+- regras determinísticas  
+- quanto features para Machine Learning
 
-🔍 Etapas do Pipeline
-1️⃣ Ingestão e Persistência
+---
 
-Leitura do arquivo CSV
+## 📐 Regras determinísticas
 
-Limpeza e padronização dos dados
+As regras representam **conhecimento explícito**, como:
+- alta volatilidade
+- baixa previsibilidade
+- quedas consecutivas
+- concentração excessiva
 
-Registro de cada upload
+São totalmente explicáveis e auditáveis.
 
-Persistência em banco SQLite
+---
 
-Histórico preservado para análises futuras
+## 🤖 Machine Learning
 
-2️⃣ Estatística Aplicada
-Estatísticas Temporais
+O Machine Learning atua como **sensor estatístico complementar**, treinado para:
 
-variação absoluta
+- antecipar risco de queda de faturamento
+- com base no comportamento recente (nível, tendência e estabilidade)
 
-variação percentual
+### Características:
+- aprendizado supervisionado
+- comparação com baselines (dummy, persistência, frequência)
+- modelo inicial: árvore de decisão
+- ML não substitui regras — **complementa**
 
-coeficiente de variação
+O treinamento é executado separadamente via:
 
-índice de volatilidade
+```bash
+python -m engine.ml.train
+🧪 Estado atual do ML
+Pipeline completo de ML implementado
 
-média móvel
+Modelo supera baselines de forma consistente
 
-Essas estatísticas medem comportamento, não tomam decisões.
+Avaliação inicial baseada em accuracy
 
-Estatísticas de Distribuição
+Próximo passo planejado:
 
-participação percentual
+métricas de classificação (precision, recall, F1)
 
-participação acumulada
+interpretação do modelo
 
-concentração dos top N
+decisão consciente de integração no produto
 
-Utilizadas para avaliar dependência estrutural do faturamento.
+🚧 Próximos passos
+Avaliação avançada do modelo
 
-3️⃣ Regras Analíticas
+Interpretação das decisões do ML
 
-As regras interpretam as estatísticas e classificam riscos, por exemplo:
+Definição do papel do ML no InsightSales
 
-crescimento estável ou irregular
+Possível integração como alerta complementar
 
-previsibilidade do volume
+📌 Observação final
+Este projeto prioriza arquitetura, clareza e decisão consciente, não apenas métricas altas.
 
-quedas consecutivas
-
-dependência excessiva de poucos itens
-
-As regras:
-
-não recalculam estatística
-
-não acessam dados brutos
-
-retornam apenas classificações e flags
-
-4️⃣ Geração de Insights
-
-O módulo de insights traduz os resultados das regras em linguagem natural, produzindo saídas como:
-
-avaliação de estabilidade do crescimento
-
-alertas de risco estrutural
-
-indícios de instabilidade operacional
-
-Nenhuma decisão é tomada nessa camada — apenas comunicação clara.
-
-▶️ Como Executar
-
-Ative o ambiente virtual
-
-Instale as dependências:
-
-pip install -r requirements.txt
-
-
-Execute o projeto:
-
-python app/main.py
-
-Saída esperada
-
-Persistência dos dados no banco
-
-Avaliações estatísticas aplicadas
-
-Lista de insights gerados automaticamente
-
-🧩 Principais Conceitos Aplicados
-
-Programação modular em Python
-
-Análise exploratória orientada a produto
-
-Estatística aplicada a comportamento e risco
-
-Separação de responsabilidades
-
-Arquitetura preparada para Machine Learning
-
-Geração automática de insights
-
-🚀 Evolução Natural do Projeto
-
-A arquitetura do InsightSales permite evolução direta para:
-
-testes automatizados
-
-dashboards e visualizações
-
-modelos de Machine Learning
-
-sistema SaaS com múltiplos usuários
-
-monitoramento contínuo de métricas
-
-Nada precisa ser reescrito — apenas estendido.
-
-📌 Observação Final
-
-Este projeto foi desenvolvido com foco em clareza, rastreabilidade analítica e maturidade arquitetural, simulando a construção de um produto real de análise de dados — do dado bruto ao insight acionável.
-
-Ele representa não apenas um estudo técnico, mas uma forma de pensar dados como produto.
-
-Preparação para Machine Learning
+Machine Learning é tratado como ferramenta de apoio, não como solução mágic

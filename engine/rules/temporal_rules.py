@@ -42,9 +42,6 @@ def regra_quedas_consecutivas(
     variacao_pct: pd.Series,
     limite: int = 2
 ) -> dict:
-    """
-    Avalia se há quedas consecutivas na variação percentual.
-    """
     if variacao_pct is None or variacao_pct.empty:
         return {
             "nivel": "indefinido",
