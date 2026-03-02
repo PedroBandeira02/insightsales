@@ -7,7 +7,7 @@ def sales_over_time():
     query = """
         SELECT
             data_venda,
-            SUM(valor_total) AS faturamento_total,
+            SUM(valor_total) AS faturamento,
             SUM(quantidade) AS numero_vendas
         FROM sales
         GROUP BY data_venda
@@ -24,10 +24,10 @@ def sales_by_category():
     query = """
         SELECT
             categoria,
-            SUM(valor_total) AS faturamento_total
+            SUM(valor_total) AS faturamento
         FROM sales
         GROUP BY categoria
-        ORDER BY faturamento_total DESC;
+        ORDER BY faturamento DESC;
     """
 
     conn = get_connection()

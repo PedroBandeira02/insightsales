@@ -7,7 +7,8 @@ em insights textuais objetivos, sem recalcular métricas ou acessar dados brutos
 
 def gerar_insights(
     resultado_temporal: dict,
-    resultado_distribuicao: dict
+    resultado_distribuicao: dict,
+    resultado_ml: dict | None = None
 ) -> list[str]:
     """
     Gera insights textuais a partir das regras temporais e de distribuição.
@@ -76,7 +77,31 @@ def gerar_insights(
             "A distribuição de faturamento apresenta boa diversificação."
         )
 
-    return insights
+    # ======================================================
+    # INSIGHTS PREDITIVOS (ML)
+    # ======================================================
 
+    if resultado_ml is not None:
+
+        variacao_prevista = resultado_ml.get("variation_percent")
+
+        if variacao_prevista is not None:
+
+            if variacao_prevista < -0.05:
+                insights.append(
+                    "A projeção indica possível retração relevante no próximo período."
+                )
+
+            elif variacao_prevista > 0.05:
+                insights.append(
+                    "A projeção indica crescimento relevante no próximo período."
+                )
+
+            else:
+                insights.append(
+                    "A projeção indica estabilidade relativa para o próximo período."
+                )
+
+    return insights
 
 

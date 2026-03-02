@@ -155,6 +155,38 @@ def build_features(
 
     return df
 
+def build_regression_dataset(
+    df: pd.DataFrame,
+    coluna_data: str = 'data_venda',
+    coluna_faturamento: str = 'faturamento'
+) -> pd.DataFrame:
+
+    df = ordenacao_temporal(df, coluna_data)
+
+    df = df.copy()
+
+    # TARGET: log-return futuro
+    df['target'] = np.log(df[coluna_faturamento]).diff().shift(-1)
+
+    # Lags
+    df['lag_1'] = df[coluna_faturamento].shift(1)
+    df['lag_2'] = df[coluna_faturamento].shift(2)
+
+    # Média móvel
+    df['ma_3'] = df[coluna_faturamento].rolling(3).mean()
+
+    # Volatilidade baseada em variação percentual
+    df['pct_change'] = df[coluna_faturamento].pct_change()
+    df['vol_3'] = df['pct_change'].rolling(3).std()
+
+    # Tendência simples
+    df['trend_3'] = df['ma_3'].diff()
+
+    df = df.dropna().reset_index(drop=True)
+
+    features = ['lag_1', 'lag_2', 'ma_3', 'vol_3', 'trend_3']
+
+    return df[features + ['target']]
 
 
 

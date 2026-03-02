@@ -19,8 +19,11 @@ from engine.rules.distribution_rules import (
     regra_dependencia_unica,
     regra_concentracao_top_n
 )
+from engine.ml.predictor import predict_next_variation
 from engine.insights.generator import gerar_insights
-
+import sys
+import os
+sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 
 def main():
     # ======================================================
@@ -45,9 +48,9 @@ def main():
     # ======================================================
 
     df_temporal = sales_over_time()
-
-    variacao_pct = variacao_percentual(df_temporal["faturamento_total"])
-    volatilidade = indice_volatilidade(df_temporal["faturamento_total"])
+    df_ml = df_temporal.rename(columns={"faturamento_total": "faturamento"})
+    variacao_pct = variacao_percentual(df_temporal["faturamento"])
+    volatilidade = indice_volatilidade(df_temporal["faturamento"])
     cv_volume = coeficiente_variacao(df_temporal["numero_vendas"])
 
     resultado_temporal = {
@@ -55,6 +58,7 @@ def main():
         "previsibilidade": regra_previsibilidade(cv_volume),
         "quedas_consecutivas": regra_quedas_consecutivas(variacao_pct)
     }
+    resultado_ml = predict_next_variation(df_ml)
 
     # ======================================================
     # ANÁLISE DE DISTRIBUIÇÃO — CATEGORIA
@@ -63,7 +67,7 @@ def main():
     df_categoria = sales_by_category()
 
     participacao_categoria = participacao_percentual(
-        df_categoria.set_index("categoria")["faturamento_total"]
+        df_categoria.set_index("categoria")["faturamento"]
     )
 
     resultado_distribuicao = {
@@ -77,7 +81,8 @@ def main():
 
     insights = gerar_insights(
         resultado_temporal=resultado_temporal,
-        resultado_distribuicao=resultado_distribuicao
+        resultado_distribuicao=resultado_distribuicao,
+        resultado_ml= resultado_ml
     )
 
     print("\n🧠 INSIGHTS GERADOS PELO INSIGHTSALES:\n")
